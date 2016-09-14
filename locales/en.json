@@ -1,0 +1,17 @@
+{
+    "starting": "nl.deskweb.netcheck is starting...",
+    "verifying": "Checking connection...",
+    "unloading": "App closed",
+    "animating": "Led ring animation, status = __status__",
+    "problem": "Internet connection has been interrupted",
+    "solved": "Internet connection has been restored",
+    "exception": "An exception has occurred: __err__",
+    "settings": {
+        "title": "Network Check",
+        "intro": "Homey checks its internet connection every minute and will signal losing it. When restored another signal will be raised.",
+        "heartbeat": "Green \"heartbeat\"",
+        "nobeat": "No, only pulse when there is a problem",
+        "yesbeat": "Yes, show a short pulse every time we're checking",
+        "save": "Save"        
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "id": "nl.deskweb.netcheck",
+    "name": {
+        "en": "Network Check",
+        "nl": "Netwerk controle"
+    },
+    "description": {
+        "en": "Keeps an eye on your network",
+        "nl": "Houdt je netwerk in de gaten"
+    },
+    "version": "0.0.2",
+    "compatibility": "0.9",
+    "author": {
+        "name": "Gabri van Lee",
+        "email": "gvanlee@gmail.com"
+    },
+    "category": "internet",
+    "images": {
+        "large": "./assets/images/large.png",
+        "small": "./assets/images/small.png"
+    },
+    "permissions": [
+        "homey:manager:speech-output",
+        "homey:manager:ledring"
+    ],
+    "flow": {
+        "triggers": [
+            {
+                "id": "connection_lost",
+                "title": {
+                    "en": "Homey has lost it's internet connection",
+                    "nl": "Homey's internetverbinding is verbroken"
+                }
+            },
+            {
+                "id": "connection_restored",
+                "title": {
+                    "en": "Homey has regained it's internet connection",
+                    "nl": "Homey's internetverbinding is weer in orde"
+                }
+            }
+        ]
+    }
+}

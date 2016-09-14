@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1 data-i18n="settings.title"></h1>
+        <p data-i18n="settings.intro"></p>
+
+        <fieldset>
+            <legend>Opties</legend>
+
+            <div class="field row">
+                <label for="hbeat" data-i18n="settings.heartbeat"></label>
+                <select name="hbeat" id="hbeat" size="1">
+                    <option value=""" data-i18n="settings.nobeat"></option>
+                    <option value="1"" data-i18n="settings.yesbeat"></option>
+                </select>
+            </div>
+        </fieldset>
+
+        <button class="right" onclick="save()"" data-i18n="settings.save"></button>
+
+        <script type="text/javascript">
+        function onHomeyReady(){
+            Homey.ready();
+            
+            // load settings from persistemt storage
+            myGetOption('hbeat');
+        }
+        
+
+        // save settings to persistemt storage
+        function save() {
+            mySetOption('hbeat');
+        }
+
+        // helper functions for persistent storage
+        function myGetOption(setting) {
+            Homey.get(setting, function(err, data) {
+                document.getElementById(setting).selectedIndex = data;
+            });        
+        }
+        function mySetOption(setting) {
+            Homey.set(setting, document.getElementById(setting).selectedIndex);        
+        }
+        </script>
+
+    </body>
+</html>

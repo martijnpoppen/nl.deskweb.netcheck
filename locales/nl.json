@@ -1,0 +1,17 @@
+{
+    "starting": "nl.deskweb.netcheck wordt gestart...",
+    "verifying": "Controle van connectie...",
+    "unloading": "App afgesloten",
+    "animating": "Licht-ring animatie, status = __status__",
+    "problem": "Er is een probleem met de internetverbinding",
+    "solved": "De internetverbinding werkt naar behoren",
+    "exception": "Er is een fout opgetreden: __err__",
+    "settings": {
+        "title": "Netwerk Check",
+        "intro": "Homey controleert of er nog internettoegang mogelijk is. Zodra dat niet zo is, wordt dit gemeld en blijft Homey rood pulseren. Als de toegang weer werkt wordt ook dit gemeld.",
+        "heartbeat": "Groene \"hartslag\"",
+        "nobeat": "Nee, allen pulseren bij problemen",
+        "yesbeat": "Ja, iedere minuut een korte puls als alles goed is",
+        "save": "Opslaan"        
+    }
+}
