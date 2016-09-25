@@ -9,7 +9,7 @@
         "nl": "Houdt je netwerk in de gaten"
     },
     "version": "0.0.2",
-    "compatibility": "0.9",
+    "compatibility": ">=0.9",
     "author": {
         "name": "Gabri van Lee",
         "email": "gvanlee@gmail.com"
