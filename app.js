@@ -1,6 +1,5 @@
 
 const http = require('http');
-const speech = Homey.manager('speech-output');
 const ledring = Homey.manager('ledring');
 const cron = Homey.manager('cron');
 const settings = Homey.manager('settings');
@@ -76,19 +75,6 @@ function notifyUser(PbProblem) {
 
     try {
         if (settings.get('curstatus') != LbNewstatus) {
-            if (PbProblem) {
-                LsMessage = __('problem');
-            }
-            else {
-                LsMessage = __('solved');
-            }
-        
-            speech.say(LsMessage, function(err, success) {
-                if (err) {
-                    myLog(err);
-                }
-            });
-            
             settings.set('curstatus', LbNewstatus);
         }
     }

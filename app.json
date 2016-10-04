@@ -8,7 +8,7 @@
         "en": "Keeps an eye on your network",
         "nl": "Houdt je netwerk in de gaten"
     },
-    "version": "0.1.0",
+    "version": "0.2.0",
     "compatibility": ">=0.9",
     "author": {
         "name": "Gabri van Lee",
@@ -20,7 +20,6 @@
         "small": "./assets/images/small.png"
     },
     "permissions": [
-        "homey:manager:speech-output",
         "homey:manager:ledring"
     ],
     "flow": {

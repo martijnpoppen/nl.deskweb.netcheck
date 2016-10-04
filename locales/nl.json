@@ -8,7 +8,7 @@
     "exception": "Er is een fout opgetreden: __err__",
     "settings": {
         "title": "Netwerk Check",
-        "intro": "Homey controleert of er nog internettoegang mogelijk is. Zodra dat niet zo is, wordt dit gemeld en blijft Homey rood pulseren. Als de toegang weer werkt wordt ook dit gemeld.",
+        "intro": "Homey controleert of er nog internettoegang mogelijk is. Zodra dat niet zo is, gaat Homey rood pulseren. Als de toegang weer werkt stop dit.",
         "heartbeat": "Groene \"hartslag\"",
         "nobeat": "Nee, allen pulseren bij problemen",
         "yesbeat": "Ja, iedere minuut een korte puls als alles goed is",
