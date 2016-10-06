@@ -20,7 +20,17 @@
         </fieldset>
 
         <button class="right" onclick="save()"" data-i18n="settings.save"></button>
-
+        <br><br>
+        <fieldset>
+            <legend>Info</legend>
+            
+            <div class="field row">
+                <span data-i18n="settings.testdesc"></span>
+            </div>
+        </fieldset>
+        
+        <button class="right" onclick="test()"" data-i18n="settings.test"></button>
+        
         <script type="text/javascript">
         function onHomeyReady(){
             Homey.ready();
@@ -33,6 +43,10 @@
         // save settings to persistemt storage
         function save() {
             mySetOption('hbeat');
+        }
+
+        function test() {
+            Homey.set('curstatus', 'X');        
         }
 
         // helper functions for persistent storage

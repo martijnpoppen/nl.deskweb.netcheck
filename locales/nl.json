@@ -6,12 +6,16 @@
     "problem": "Er is een probleem met de internetverbinding",
     "solved": "De internetverbinding werkt naar behoren",
     "exception": "Er is een fout opgetreden: __err__",
+    "triggering": "Flow __type__ wordt gestart",
+    "testmode": "Testmode gestart vanaf instellingenscherm",
     "settings": {
         "title": "Netwerk Check",
         "intro": "Homey controleert of er nog internettoegang mogelijk is. Zodra dat niet zo is, gaat Homey rood pulseren. Als de toegang weer werkt stop dit.",
         "heartbeat": "Groene \"hartslag\"",
         "nobeat": "Nee, allen pulseren bij problemen",
         "yesbeat": "Ja, iedere minuut een korte puls als alles goed is",
-        "save": "Opslaan"        
+        "save": "Opslaan",
+        "test": "Testen",
+        "testdesc": "Met de testknop trigger je een netwerkstoring. Binnen een minuut zal de normale flow voor netwerkstoring worden geactiveerd en een minuut later die voor verbindingsherstel"
     }
 }

@@ -3,6 +3,7 @@ const http = require('http');
 const ledring = Homey.manager('ledring');
 const cron = Homey.manager('cron');
 const settings = Homey.manager('settings');
+const flow = Homey.manager('flow');
 
 function init() {
 	myLog(__('starting'));
@@ -30,21 +31,28 @@ function init() {
 }
 
 function verifyConnection() {
-    // 74.125.133.94 = google.nl
-    var chunk, data;
-    
-    var req = http.request({
-            host:   '74.125.133.94',
-            path:   '/',
-            method: 'GET'
-        },
-        (response) => {
-            response.on('data', chunk => data += chunk);
-            response.on('end', () => notifyUser(false));
-        });
+    if (settings.get('curstatus') == 'X') {
+        // testmode, just say it stopped working
+        myLog(__('testmode'));
+        notifyUser(true);
+    }
+    else {
+        // 74.125.133.94 = google.nl
+        var chunk, data;
+        
+        var req = http.request({
+                host:   '74.125.133.94',
+                path:   '/',
+                method: 'GET'
+            },
+            (response) => {
+                response.on('data', chunk => data += chunk);
+                response.on('end', () => notifyUser(false));
+            });
 
-    req.on('error', e => notifyUser(true));
-    req.end();
+        req.on('error', e => notifyUser(true));
+        req.end();
+    }
 }
 
 function myLog(PsMessage) {
@@ -54,6 +62,7 @@ function myLog(PsMessage) {
 function notifyUser(PbProblem) {
     var LsColor = (! PbProblem ? '#00f000' : '#a00000');
     var LnLength = (PbProblem ? 2500 : 125);
+    var LsTrigger = (PbProblem ? 'connection_lost' : 'connection_restored');
     var LsMessage;
 
     var LbNewstatus = (PbProblem ? 'T' : 'F');
@@ -76,6 +85,10 @@ function notifyUser(PbProblem) {
     try {
         if (settings.get('curstatus') != LbNewstatus) {
             settings.set('curstatus', LbNewstatus);
+
+            // flow triggeren als we een melding binnen hebben gekregen
+            myLog(__('triggering', { 'type': LsTrigger }));
+            flow.trigger(LsTrigger, { });
         }
     }
     catch (err) {

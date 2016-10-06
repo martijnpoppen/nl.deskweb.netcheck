@@ -27,15 +27,15 @@
             {
                 "id": "connection_lost",
                 "title": {
-                    "en": "Homey has lost it's internet connection",
-                    "nl": "Homey's internetverbinding is verbroken"
+                    "en": "Internet connection lost",
+                    "nl": "Internetverbinding verbroken"
                 }
             },
             {
                 "id": "connection_restored",
                 "title": {
-                    "en": "Homey has regained it's internet connection",
-                    "nl": "Homey's internetverbinding is weer in orde"
+                    "en": "Internet connection restored",
+                    "nl": "Internetverbinding hersteld"
                 }
             }
         ]
