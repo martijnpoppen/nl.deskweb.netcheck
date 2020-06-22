@@ -1,6 +1,6 @@
 {
   "id": "nl.deskweb.netcheck",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "compatibility": ">=1.5.0",
   "sdk": 2,
   "name": {
@@ -26,21 +26,21 @@
     "email": "gvanlee@gmail.com"
   },
   "flow": {
-      "triggers": [
-          {
-              "id": "connection_lost",
-              "title": {
-                  "en": "Internet connection lost",
-                  "nl": "Internetverbinding verbroken"
-              }
-          },
-          {
-              "id": "connection_restored",
-              "title": {
-                  "en": "Internet connection restored",
-                  "nl": "Internetverbinding hersteld"
-              }
-          }
-      ]
+    "triggers": [
+      {
+        "id": "connection_lost",
+        "title": {
+          "en": "Internet connection lost",
+          "nl": "Internetverbinding verbroken"
+        }
+      },
+      {
+        "id": "connection_restored",
+        "title": {
+          "en": "Internet connection restored",
+          "nl": "Internetverbinding hersteld"
+        }
+      }
+    ]
   }
 }
