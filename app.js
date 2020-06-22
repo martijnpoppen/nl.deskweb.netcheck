@@ -4,7 +4,7 @@ const Homey = require('homey');
 const http = require('http');
 
 class MyApp extends Homey.App {
-	
+
 	onInit() {
 		this.currentStatus = 'F';
 		this.logMessage('nl.deskweb.network-check is being initialized');
@@ -23,34 +23,36 @@ class MyApp extends Homey.App {
     verifyConnection() {
 		// 74.125.133.94 = google.nl
 		var chunk, data;
-		
-		var req = http.request({
-				host:   '1.1.1.1',
-				path:   '/',
-				method: 'GET'
-			},
-			(response) => {
-				response.on('data', chunk => data += chunk);
-				response.on('end', () => this.notifyUser(false));
-			});
 
-		req.on('error', e => this.notifyUser(true));
-		req.end();
+        this.logMessage('Performing web request ...');
+
+        var req = http.request({
+                host:   '1.1.1.1',
+                path:   '/',
+                method: 'GET'
+            },
+            (response) => {
+                response.on('data', chunk => data += chunk);
+                response.on('end', () => this.notifyUser(false));
+            });
+
+        req.on('error', e => this.notifyUser(true));
+        req.end();
 
         var myApp = this;
-        setTimeout(function () { 
-            myApp.verifyConnection(); 
+        setTimeout(function () {
+            myApp.verifyConnection();
         }, 15000);
 	}
-		
+
     notifyUser(PbProblem) {
         var LaColor = (! PbProblem ?{ r: 0, g: 160, b: 0 } : { r: 160, g: 0, b: 0 } );
         var LnLength = (PbProblem ? 2500 : 125);
         var LsTrigger = (PbProblem ? 'connection_lost' : 'connection_restored');
         var LsMessage;
-    
+
         var LbNewstatus = (PbProblem ? 'T' : 'F');
-        
+
         var LaFrames = [];
         var LaFrame = [];
 
@@ -72,7 +74,7 @@ class MyApp extends Homey.App {
                 priority: 'INFORMATIVE', // or FEEDBACK, or CRITICAL
                 duration: LnLength, // duration in ms, or keep empty for infinite
               });
-              
+
               // register the animation with Homey
               myAnimation
                 .on('start', () => {
@@ -84,19 +86,19 @@ class MyApp extends Homey.App {
                 .register()
                   .then( () => {
                     this.log('Animation registered!');
-              
+
                     myAnimation.start();
                   })
-                  .catch( this.error );            
+                  .catch( this.error );
         }
         catch (err) {
             this.logMessage('exception: err = ' + err);
         }
-    
+
         try {
             if (this.currentStatus != LbNewstatus) {
                 this.currentStatus = LbNewstatus;
-    
+
                 // flow triggeren als we een melding binnen hebben gekregen
                 this.logMessage('triggering: type = ' + LsTrigger);
 
@@ -111,7 +113,7 @@ class MyApp extends Homey.App {
         catch (err) {
             this.logMessage('exception: err = ' + err);
         }
-    }	
+    }
 }
 
 module.exports = MyApp;
