@@ -8,3 +8,6 @@ Keep in mind that, once your internet connection is lost, some things like speec
 
 Update:
 SDK 2 introduced into app, rewrite for better compatibility
+
+Icon:
+Spider by ronin design from thenounproject.com.
