@@ -21,7 +21,7 @@ class MyApp extends Homey.App {
     }
 
     verifyConnection() {
-		// 74.125.133.94 = google.nl
+		// 1.1.1.1 = Cloudflare
 		var chunk, data;
 
         this.logMessage('Performing web request ...');
@@ -46,50 +46,54 @@ class MyApp extends Homey.App {
 	}
 
     notifyUser(PbProblem) {
-        var LaColor = (! PbProblem ?{ r: 0, g: 160, b: 0 } : { r: 160, g: 0, b: 0 } );
-        var LnLength = (PbProblem ? 2500 : 125);
         var LsTrigger = (PbProblem ? 'connection_lost' : 'connection_restored');
         var LsMessage;
 
         var LbNewstatus = (PbProblem ? 'T' : 'F');
 
-        var LaFrames = [];
-        var LaFrame = [];
-
-        for (var i = 0; i < 24; i++) {
-            LaFrame.push(LaColor);
-        }
-        LaFrames.push(LaFrame);
-
         try {
-			this.logMessage('animating: status = ' +  LbNewstatus );
+            if (PbProblem) {
+                this.logMessage('animating: status = ' +  LbNewstatus );
 
-            const myAnimation = new Homey.LedringAnimation({
-                options: {
-                  fps: 1,       // real frames per second
-                  tfps: 60,     // target frames per second. this means that every frame will be interpolated 60 times
-                  rpm: 0,       // rotations per minute
-                },
-                frames: LaFrames,
-                priority: 'INFORMATIVE', // or FEEDBACK, or CRITICAL
-                duration: LnLength, // duration in ms, or keep empty for infinite
-              });
+                var LaFrames = [];
+                var LaFrame = [];
 
-              // register the animation with Homey
-              myAnimation
-                .on('start', () => {
-                  // The animation has started playing
-                })
-                .on('stop', () => {
-                    // The animation has stopped playing
-                })
-                .register()
-                  .then( () => {
-                    this.log('Animation registered!');
+                for (var i = 0; i < 24; i++) {
+                    if (PbProblem) {
+                        LaFrame.push({ r: 200, g: 0, b: 0 });
+                    }
+                    else {
+                        LaFrame.push({ r: 0, g: 160, b: 0 });
+                    }
+                }
+                LaFrames.push(LaFrame);
 
-                    myAnimation.start();
-                  })
-                  .catch( this.error );
+                const myAnimation = new Homey.LedringAnimation({
+                    options: {
+                        fps: 1,                             // real frames per second
+                        tfps: 60,                           // target frames per second. this means that every frame will be interpolated 60 times
+                        rpm: 2,                             // rotations per minute
+                    },
+                    frames: LaFrames,
+                    priority: 'INFORMATIVE',                // or FEEDBACK, or CRITICAL
+                    duration: (PbProblem ? 2500 : 125)      // duration in ms, or keep empty for infinite
+                });
+
+                myAnimation
+                    .on('start', () => {
+
+                    })
+                    .on('stop', () => {
+
+                    })
+                    .register()
+                    .then(() => {
+                        this.log('Animation registered!');
+
+                        myAnimation.start();
+                    })
+                    .catch(this.error);
+            }
         }
         catch (err) {
             this.logMessage('exception: err = ' + err);
