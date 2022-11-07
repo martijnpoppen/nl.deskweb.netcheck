@@ -1,5 +1,5 @@
 const Homey = require('homey');
-const axios = require('axios');
+const dns = require('dns');
 
 class App extends Homey.App {
     log() {
@@ -18,27 +18,26 @@ class App extends Homey.App {
         await this.flowConditions();
 
         this.currentStatus = 'Online';
-        this.verifyConnection();
+        this.verifyConnection(this);
 
         this.homey.setInterval(() => {
-            this.verifyConnection();
+            this.verifyConnection(this);
         }, 15000);
     }
 
-    async verifyConnection() {
+    async verifyConnection(ctx) {
         // 1.1.1.1 = Cloudflare
-        this.log('verifyConnection - Performing web request to Cloudflare');
+        ctx.log('verifyConnection - Performing web request to Cloudflare');
 
-        await axios
-            .get('https://1.1.1.1')
-            .then((response) => {
-                this.log('verifyConnection - Succes ...');
-                return this.flowTrigger(false);
-            })
-            .catch((error) => {
-                this.log('verifyConnection - Failed ...');
-                return this.flowTrigger(true);
-            });
+        dns.resolve('1.1.1.1', function (err) {
+            if (err) {
+                ctx.log('verifyConnection - Failure ...')
+                ctx.flowTrigger(true);
+            } else {
+                ctx.log('verifyConnection - Succes ...')
+                ctx.flowTrigger(false);
+            }
+        });
     }
 
     flowTrigger(isFailure = false) {
@@ -56,9 +55,6 @@ class App extends Homey.App {
                     .trigger()
                     .catch(this.error)
                     .then(this.log(`flowTrigger - ${triggerType} triggered succesfully`));
-
-                let rainStartTrigger = new Homey.FlowCardTrigger(triggerType);
-                rainStartTrigger.register().trigger().catch(this.error).then(this.log('flowTrigger - flow triggered succesfully'));
             }
         } catch (err) {
             this.log('flowTrigger - error: ', err);
