@@ -10,5 +10,8 @@
   },
   "2.0.0": {
     "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
+  },
+  "2.0.1": {
+    "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
   }
 }
