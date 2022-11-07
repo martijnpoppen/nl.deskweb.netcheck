@@ -1,10 +1,12 @@
 {
   "id": "nl.deskweb.netcheck",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#000000",
-  "platforms": ["local"],
+  "platforms": [
+    "local"
+  ],
   "name": {
     "en": "Network Check",
     "nl": "Netwerk Controle"
@@ -13,7 +15,9 @@
     "en": "Keeps an eye on your network",
     "nl": "Houdt je netwerk in de gaten"
   },
-  "category": ["tools"],
+  "category": [
+    "tools"
+  ],
   "tags": {
     "en": [
       "Network",
