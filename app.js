@@ -1,123 +1,74 @@
-'use strict';
-
 const Homey = require('homey');
-const http = require('http');
+const axios = require('axios');
 
-class MyApp extends Homey.App {
+class App extends Homey.App {
+    log() {
+        console.log.bind(this, '[log]').apply(this, arguments);
+    }
 
-	onInit() {
-		this.currentStatus = 'F';
-		this.logMessage('nl.deskweb.network-check is being initialized');
+    error() {
+        console.error.bind(this, '[error]').apply(this, arguments);
+    }
 
-        // Initiele test om de boel aan te zwengelen
+    // -------------------- INIT ----------------------
+
+    async onInit() {
+        this.log(`${this.homey.manifest.id} - ${this.homey.manifest.version} started...`);
+
+        await this.flowConditions();
+
+        this.currentStatus = 'Online';
         this.verifyConnection();
-	}
 
-    logMessage(sLog) {
-        // Only for debug purposes
-        if (false) {
-            this.log(sLog);
+        this.homey.setInterval(() => {
+            this.verifyConnection();
+        }, 15000);
+    }
+
+    async verifyConnection() {
+        // 1.1.1.1 = Cloudflare
+        this.log('verifyConnection - Performing web request to Cloudflare');
+
+        await axios
+            .get('https://1.1.1.1')
+            .then((response) => {
+                this.log('verifyConnection - Succes ...');
+                return this.flowTrigger(false);
+            })
+            .catch((error) => {
+                this.log('verifyConnection - Failed ...');
+                return this.flowTrigger(true);
+            });
+    }
+
+    flowTrigger(isFailure = false) {
+        try {
+            const triggerType = isFailure ? 'connection_lost' : 'connection_restored';
+            const triggerStatus = isFailure ? 'Offline' : 'Online';
+
+            if (this.currentStatus != triggerStatus) {
+                this.currentStatus = triggerStatus;
+
+                this.log('flowTrigger - type: ' + triggerType);
+
+                this.homey.app.trigger_network = this.homey.flow.getTriggerCard(triggerType);
+                this.homey.app.trigger_network
+                    .trigger()
+                    .catch(this.error)
+                    .then(this.log(`flowTrigger - ${triggerType} triggered succesfully`));
+
+                let rainStartTrigger = new Homey.FlowCardTrigger(triggerType);
+                rainStartTrigger.register().trigger().catch(this.error).then(this.log('flowTrigger - flow triggered succesfully'));
+            }
+        } catch (err) {
+            this.log('flowTrigger - error: ', err);
         }
     }
 
-    verifyConnection() {
-		// 1.1.1.1 = Cloudflare
-		var chunk, data;
-
-        this.logMessage('Performing web request ...');
-
-        var req = http.request({
-                host:   '1.1.1.1',
-                path:   '/',
-                method: 'GET'
-            },
-            (response) => {
-                response.on('data', chunk => data += chunk);
-                response.on('end', () => this.notifyUser(false));
-            });
-
-        req.on('error', e => this.notifyUser(true));
-        req.end();
-
-        var myApp = this;
-        setTimeout(function () {
-            myApp.verifyConnection();
-        }, 15000);
-	}
-
-    notifyUser(PbProblem) {
-        var LsTrigger = (PbProblem ? 'connection_lost' : 'connection_restored');
-        var LsMessage;
-
-        var LbNewstatus = (PbProblem ? 'T' : 'F');
-
-        try {
-            if (PbProblem) {
-                this.logMessage('animating: status = ' +  LbNewstatus );
-
-                var LaFrames = [];
-                var LaFrame = [];
-
-                for (var i = 0; i < 24; i++) {
-                    if (PbProblem) {
-                        LaFrame.push({ r: 200, g: 0, b: 0 });
-                    }
-                    else {
-                        LaFrame.push({ r: 0, g: 160, b: 0 });
-                    }
-                }
-                LaFrames.push(LaFrame);
-
-                const myAnimation = new Homey.LedringAnimation({
-                    options: {
-                        fps: 1,                             // real frames per second
-                        tfps: 60,                           // target frames per second. this means that every frame will be interpolated 60 times
-                        rpm: 2,                             // rotations per minute
-                    },
-                    frames: LaFrames,
-                    priority: 'INFORMATIVE',                // or FEEDBACK, or CRITICAL
-                    duration: (PbProblem ? 2500 : 125)      // duration in ms, or keep empty for infinite
-                });
-
-                myAnimation
-                    .on('start', () => {
-
-                    })
-                    .on('stop', () => {
-
-                    })
-                    .register()
-                    .then(() => {
-                        this.log('Animation registered!');
-
-                        myAnimation.start();
-                    })
-                    .catch(this.error);
-            }
-        }
-        catch (err) {
-            this.logMessage('exception: err = ' + err);
-        }
-
-        try {
-            if (this.currentStatus != LbNewstatus) {
-                this.currentStatus = LbNewstatus;
-
-                // flow triggeren als we een melding binnen hebben gekregen
-                this.logMessage('triggering: type = ' + LsTrigger);
-
-				let rainStartTrigger = new Homey.FlowCardTrigger(LsTrigger);
-				rainStartTrigger
-					.register()
-					.trigger()
-						.catch( this.error )
-						.then( this.log('flow triggered succesfully') )
-            }
-        }
-        catch (err) {
-            this.logMessage('exception: err = ' + err);
-        }
+    async flowConditions() {
+        const connection_online_offline = this.homey.flow.getConditionCard('connection_online_offline');
+        connection_online_offline.registerRunListener(async () => this.currentStatus === 'Online');
     }
 }
 
-module.exports = MyApp;
+module.exports = App;

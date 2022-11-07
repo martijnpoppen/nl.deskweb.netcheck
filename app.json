@@ -1,8 +1,10 @@
 {
   "id": "nl.deskweb.netcheck",
   "version": "1.0.3",
-  "compatibility": ">=1.5.0",
-  "sdk": 2,
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "brandColor": "#000000",
+  "platforms": ["local"],
   "name": {
     "en": "Network Check",
     "nl": "Netwerk Controle"
@@ -11,20 +13,66 @@
     "en": "Keeps an eye on your network",
     "nl": "Houdt je netwerk in de gaten"
   },
-  "category": [
-    "tools"
-  ],
-  "permissions": [
-    "homey:manager:ledring"
-  ],
+  "category": ["tools"],
+  "tags": {
+    "en": [
+      "Network",
+      "Failure",
+      "Internet",
+      "PTP",
+      "Modem",
+      "Router",
+      "Precense",
+      "Alarm",
+      "Restart",
+      "Offline",
+      "Online"
+    ]
+  },
   "images": {
     "large": "/assets/images/large.png",
     "small": "/assets/images/small.png"
   },
   "author": {
-    "name": "Gabri van Lee",
-    "email": "gvanlee@gmail.com"
+    "name": "Martijn Poppen",
+    "email": "homey@martijnpoppen.nl"
   },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Martijn Poppen",
+        "email": "homey@martijnpoppen.nl"
+      },
+      {
+        "name": "Gabri van Lee",
+        "email": "gvanlee@gmail.com"
+      }
+    ],
+    "translators": [
+      {
+        "name": "🇬🇧 Martijn Poppen"
+      },
+      {
+        "name": "🇳🇱 Martijn Poppen"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "martijnpoppen"
+      },
+      "bunq": {
+        "username": "martijnpoppen"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://community.homey.app/t/app-pro-network-check/71869"
+  },
+  "source": "https://github.com/martijnpoppen/nl.deskweb.netcheck",
+  "homeyCommunityTopicId": 71869,
+  "support": "https://community.homey.app/t/app-pro-network-check/71869",
   "flow": {
     "triggers": [
       {
@@ -39,6 +87,19 @@
         "title": {
           "en": "Internet connection restored",
           "nl": "Internetverbinding hersteld"
+        }
+      }
+    ],
+    "conditions": [
+      {
+        "id": "connection_online_offline",
+        "title": {
+          "en": "Internet connection is online/offline",
+          "nl": "Internet connectie is online/offline"
+        },
+        "titleFormatted": {
+          "en": "Internet connection is !{{online|offline}}",
+          "nl": "Internet connectie is !{{online|offline}}"
         }
       }
     ]
