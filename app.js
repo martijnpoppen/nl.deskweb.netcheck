@@ -1,5 +1,5 @@
 const Homey = require('homey');
-const dns = require('dns');
+const fetch = require('node-fetch');
 
 class App extends Homey.App {
     log() {
@@ -18,32 +18,41 @@ class App extends Homey.App {
         await this.flowConditions();
 
         this.currentStatus = 'Online';
-        this.verifyConnection(this);
 
-        this.homey.setInterval(() => {
-            this.verifyConnection(this);
-        }, 15000);
+        this.verifyConnection();
+
+        // this.homey.setInterval(() => {
+        //     this.verifyConnection(this);
+        // }, 15000);
     }
 
-    async verifyConnection(ctx) {
+    async verifyConnection() {
         // 1.1.1.1 = Cloudflare
-        ctx.log('verifyConnection - Performing web request to Cloudflare');
+        this.log('verifyConnection - Performing web request to Cloudflare');
 
-        dns.resolve('1.1.1.1', function (err) {
-            if (err) {
-                ctx.log('verifyConnection - Failure ...')
-                ctx.flowTrigger(true);
-            } else {
-                ctx.log('verifyConnection - Succes ...')
-                ctx.flowTrigger(false);
-            }
-        });
+        const isFailure = await fetch('https://cloudflare.com', {
+            method: 'FET',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            referrerPolicy: 'no-referrer'
+        })
+            .then(() => false)
+            .catch(() => true);
+
+        this.flowTrigger(isFailure);
+
+        const that = this;
+        setTimeout(() => {
+            that.verifyConnection();
+        }, 15000);
     }
 
     flowTrigger(isFailure = false) {
         try {
             const triggerType = isFailure ? 'connection_lost' : 'connection_restored';
             const triggerStatus = isFailure ? 'Offline' : 'Online';
+
+            this.log(`verifyConnection - ${triggerStatus} ...`);
 
             if (this.currentStatus != triggerStatus) {
                 this.currentStatus = triggerStatus;
