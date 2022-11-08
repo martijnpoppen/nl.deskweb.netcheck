@@ -13,5 +13,8 @@
   },
   "2.0.5": {
     "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
+  },
+  "2.0.6": {
+    "en": "FIX: Netcheck with new SDK 3"
   }
 }
