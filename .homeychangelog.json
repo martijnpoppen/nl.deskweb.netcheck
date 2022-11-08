@@ -8,16 +8,10 @@
   "1.0.3": {
     "en": "Added icon"
   },
-  "2.0.0": {
+  "2.0.4": {
     "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
   },
-  "2.0.1": {
-    "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
-  },
-  "2.0.2": {
-    "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
-  },
-  "2.0.3": {
+  "2.0.5": {
     "en": "BREAK: Update to Homey SDK 3 | NEW: Condition card"
   }
 }
