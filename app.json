@@ -1,9 +1,9 @@
 {
   "id": "nl.deskweb.netcheck",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "brandColor": "#000000",
+  "brandColor": "#5220df",
   "platforms": [
     "local"
   ],
