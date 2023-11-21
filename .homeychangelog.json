@@ -19,5 +19,8 @@
   },
   "2.1.2": {
     "en": "NEW: add app settings"
+  },
+  "2.1.3": {
+    "en": "FIX: issue in trigger card"
   }
 }
