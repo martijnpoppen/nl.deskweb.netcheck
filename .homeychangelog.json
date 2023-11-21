@@ -13,5 +13,8 @@
   },
   "2.0.7": {
     "en": "FIX: Netcheck with new SDK 3"
+  },
+  "2.1.1": {
+    "en": "NEW: add app settings to configure domain, interval and failure rate"
   }
 }
