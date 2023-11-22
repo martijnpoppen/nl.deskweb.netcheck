@@ -16,21 +16,56 @@ class App extends Homey.App {
         this.log(`${this.homey.manifest.id} - ${this.homey.manifest.version} started...`);
 
         await this.flowConditions();
+        await this.setSettings();
 
         this.currentStatus = 'Online';
+        this.isFailureRate = 0;
 
         this.verifyConnection();
+    }
 
-        // this.homey.setInterval(() => {
-        //     this.verifyConnection(this);
-        // }, 15000);
+    async setSettings() {
+        this.appSettings = this.homey.settings.get('settings');
+
+        if(!this.appSettings) {
+            this.log("setSettings - Appsettings not found - setings default");
+            this.homey.settings.set('settings', {
+                host: 'https://cloudflare.com',
+                interval: 15,
+                failure_rate: 1
+            });
+
+            this.appSettings = this.homey.settings.get('settings');
+        }
+        
+        if('host' in this.appSettings === false) {
+            await this.homey.settings.set('settings', {
+                ...this.appSettings,
+                host: 'https://cloudflare.com'
+            });
+        }
+
+        if('interval' in this.appSettings === false) {
+            await this.homey.settings.set('settings', {
+                ...this.appSettings,
+                interval: 15
+            });
+        }
+
+        if('failure_rate' in this.appSettings === false) {
+            await this.homey.settings.set('settings', {
+                ...this.appSettings,
+                failure_rate: 1
+            });
+        }
     }
 
     async verifyConnection() {
-        // 1.1.1.1 = Cloudflare
-        this.log('verifyConnection - Performing web request to Cloudflare');
+        this.appSettings = this.homey.settings.get('settings');
+        this.log("verifyConnection - appSettings:",  this.appSettings);
+        this.log('verifyConnection - Performing web request to ', this.appSettings.host);
 
-        const isFailure = await fetch('https://cloudflare.com', {
+        const isFailure = await fetch(this.appSettings.host, {
             method: 'FET',
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
@@ -39,12 +74,24 @@ class App extends Homey.App {
             .then(() => false)
             .catch(() => true);
 
-        this.flowTrigger(isFailure);
+        
+        if(isFailure) {
+            this.isFailureRate += 1;
+            this.log('verifyConnection Failed - FailureRate: ', this.isFailureRate);
+        } else {
+            this.isFailureRate = 0;
+            this.log('verifyConnection Succes - FailureRate: ', this.isFailureRate);
+            this.flowTrigger(false);
+        }
+
+        if(this.isFailureRate >= this.appSettings.failure_rate) {
+            this.flowTrigger(true);
+        }
 
         const that = this;
         setTimeout(() => {
             that.verifyConnection();
-        }, 15000);
+        }, this.appSettings.interval * 1000);
     }
 
     flowTrigger(isFailure = false) {
@@ -52,7 +99,7 @@ class App extends Homey.App {
             const triggerType = isFailure ? 'connection_lost' : 'connection_restored';
             const triggerStatus = isFailure ? 'Offline' : 'Online';
 
-            this.log(`verifyConnection - ${triggerStatus} ...`);
+            this.log(`flowTrigger - ${triggerStatus} ...`);
 
             if (this.currentStatus != triggerStatus) {
                 this.currentStatus = triggerStatus;

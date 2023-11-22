@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+</head>
+
+<body>
+    <header class="homey-header">
+        <h1 class="homey-title">
+            Settings
+        </h1>
+        <p class="homey-subtitle" data-i18n="settings.subtitle">
+            Saved settings will be picked up with the next check (no app restart needed)
+        </p>
+    </header>
+    <section>
+        <div class="homey-form-group">
+            <label class="homey-form-label" for="host">Url to check</label>
+            <input class="homey-form-input" id="host" type="text" value="" />
+        </div>
+        <div class="homey-form-group">
+            <label class="homey-form-label" for="interval">Interval (in seconds)</label>
+            <input class="homey-form-input" id="interval" type="number" value="" />
+        </div>
+        <div class="homey-form-group">
+            <label class="homey-form-label" for="failure_rate">Failure rate (when should Homey communicate offline
+                (default: 3 times)</label>
+            <input class="homey-form-input" id="failure_rate" type="number" value="" />
+        </div>
+        <button id="submit" class="homey-button-primary-full">Save</button>
+    </section>
+    <script type="text/javascript">
+        const _settingsKey = `settings`;
+
+        function onHomeyReady (Homey) {
+            Homey.get(_settingsKey, initializeSettings);
+            Homey.on('settings.set', (key, data) => {
+                if (key == _settingsKey) {
+                    Homey.get(_settingsKey, initializeSettings);
+                }
+            });
+
+            Homey.ready();
+        }
+
+        function initializeSettings (err, data) {
+            document.getElementById('host').value = data['host'];
+            document.getElementById('interval').value = data['interval'];
+            document.getElementById('failure_rate').value = data['failure_rate'];
+
+
+            init();
+        }
+
+        function init () {
+            const button =  document.getElementById('submit');
+            button.addEventListener('click', function (e) {
+
+                button.classList.add('is-loading');
+
+                Homey.set(`${_settingsKey}`, {
+                    host: document.getElementById('host').value,
+                    interval: parseInt(document.getElementById('interval').value),
+                    failure_rate: parseInt(document.getElementById('failure_rate').value),
+                });
+
+                
+                setTimeout(() => {
+                    button.classList.remove('is-loading');
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+
+</html>
