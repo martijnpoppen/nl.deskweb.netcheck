@@ -32,7 +32,7 @@ class App extends Homey.App {
             this.homey.settings.set('settings', {
                 host: 'https://cloudflare.com',
                 interval: 15,
-                failure_rate: 1
+                failure_rate: 3
             });
 
             this.appSettings = this.homey.settings.get('settings');
@@ -55,7 +55,7 @@ class App extends Homey.App {
         if('failure_rate' in this.appSettings === false) {
             await this.homey.settings.set('settings', {
                 ...this.appSettings,
-                failure_rate: 1
+                failure_rate: 3
             });
         }
     }
