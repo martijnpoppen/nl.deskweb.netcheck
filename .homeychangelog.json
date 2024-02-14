@@ -22,5 +22,8 @@
   },
   "2.1.3": {
     "en": "FIX: issue in trigger card"
+  },
+  "2.1.4": {
+    "en": "FIX: set default failure rate to 3"
   }
 }
