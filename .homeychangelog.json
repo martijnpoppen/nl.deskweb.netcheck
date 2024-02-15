@@ -25,5 +25,8 @@
   },
   "2.1.4": {
     "en": "FIX: set default failure rate to 3"
+  },
+  "2.1.5": {
+    "en": "FIX: set failure rate minimum to 3, to prevent false positives"
   }
 }
