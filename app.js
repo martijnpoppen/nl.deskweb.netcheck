@@ -52,7 +52,21 @@ class App extends Homey.App {
             });
         }
 
+        if('interval' in this.appSettings && this.appSettings.interval < 10) {
+            await this.homey.settings.set('settings', {
+                ...this.appSettings,
+                interval: 10
+            });
+        }
+
         if('failure_rate' in this.appSettings === false) {
+            await this.homey.settings.set('settings', {
+                ...this.appSettings,
+                failure_rate: 3
+            });
+        }
+
+        if('failure_rate' in this.appSettings && this.appSettings.failure_rate < 3) {
             await this.homey.settings.set('settings', {
                 ...this.appSettings,
                 failure_rate: 3

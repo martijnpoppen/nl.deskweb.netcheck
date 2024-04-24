@@ -20,12 +20,12 @@
         </div>
         <div class="homey-form-group">
             <label class="homey-form-label" for="interval">Interval (in seconds)</label>
-            <input class="homey-form-input" id="interval" type="number" value="" />
+            <input class="homey-form-input" id="interval" type="number" min="10" value="" />
         </div>
         <div class="homey-form-group">
             <label class="homey-form-label" for="failure_rate">Failure rate (when should Homey communicate offline
-                (default: 3 times)</label>
-            <input class="homey-form-input" id="failure_rate" type="number" value="" />
+                (default: 3 times (minimum 3))</label>
+            <input class="homey-form-input" id="failure_rate" type="number" min="3" value="" />
         </div>
         <button id="submit" class="homey-button-primary-full">Save</button>
     </section>
